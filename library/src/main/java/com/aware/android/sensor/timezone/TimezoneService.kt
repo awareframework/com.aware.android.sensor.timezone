@@ -8,6 +8,8 @@ import android.os.IBinder
 import android.util.Log
 import com.aware.android.sensor.timezone.model.TimezoneData
 import com.awareframework.android.core.AwareSensor
+import com.awareframework.android.core.model.SensorConfig
+import com.google.gson.Gson
 import java.util.*
 
 
@@ -29,16 +31,41 @@ class TimezoneService : AwareSensor() {
         const val ACTION_AWARE_TIMEZONE = "ACTION_AWARE_TIMEZONE"
         const val EXTRA_DATA = "data"
 
-        val config: Map<String, String> = mapOf("deviceId" to "")
+        const val ACTION_AWARE_TIMEZONE_START = "com.aware.android.sensor.timezone.SENSOR_START"
+        const val ACTION_AWARE_TIMEZONE_STOP = "com.aware.android.sensor.timezone.SENSOR_STOP"
+
+        const val ACTION_AWARE_TIMEZONE_SET_LABEL = "com.aware.android.sensor.timezone.SET_LABEL"
+        const val ACTION_AWARE_TIMEZONE_SYNC = "com.aware.android.sensor.timezone.SYNC"
+        const val EXTRA_LABEL = "label"
+
+        fun startService(context: Context, config: TimezoneConfig? = null) {
+            if (config != null)
+                CONFIG.replaceWith(config)
+            context.startService(Intent(context, TimezoneService::class.java))
+        }
+
+        fun stopService(context: Context) {
+            context.stopService(Intent(context, TimezoneService::class.java))
+        }
+
+        val CONFIG: TimezoneConfig = TimezoneConfig()
     }
 
-    private var lastTimezone = ""
+    private var lastTimezone: String = ""
 
     private val timezoneReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent ?: return
             when (intent.action) {
                 Intent.ACTION_TIMEZONE_CHANGED -> retrieveTimezone()
+
+                ACTION_AWARE_TIMEZONE_SET_LABEL -> {
+                    intent.getStringExtra(EXTRA_LABEL)?.let {
+                        CONFIG.label = it
+                    }
+                }
+
+                ACTION_AWARE_TIMEZONE_SYNC -> onSync(intent)
             }
         }
     }
@@ -48,6 +75,8 @@ class TimezoneService : AwareSensor() {
 
         registerReceiver(timezoneReceiver, IntentFilter().apply {
             addAction(Intent.ACTION_TIMEZONE_CHANGED)
+            addAction(ACTION_AWARE_TIMEZONE_SET_LABEL)
+            addAction(ACTION_AWARE_TIMEZONE_SYNC)
         })
 
         logd("Timezone service created.")
@@ -82,14 +111,16 @@ class TimezoneService : AwareSensor() {
 
         lastTimezone = TimeZone.getDefault().id
 
-        val timezoneData = TimezoneData(
+        val data = TimezoneData(
                 timezoneId = lastTimezone
         ).apply {
             timestamp = System.currentTimeMillis()
-            deviceId = config["deviceId"]!!
+            deviceId = CONFIG.deviceId
         }
 
-        dbEngine?.save(timezoneData, TimezoneData.TABLE_NAME)
+        dbEngine?.save(data, TimezoneData.TABLE_NAME)
+
+        CONFIG.timezoneObserver?.onTimezoneChanged(data)
 
         sendBroadcast(Intent(ACTION_AWARE_TIMEZONE).apply {
             putExtra(EXTRA_DATA, lastTimezone)
@@ -101,9 +132,64 @@ class TimezoneService : AwareSensor() {
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
+
+    class TimezoneServiceBroadcastReceiver : AwareSensor.SensorBroadcastReceiver() {
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            context ?: return
+
+            logd("Sensor broadcast received. action: " + intent?.action)
+
+            when (intent?.action) {
+                AwareSensor.SensorBroadcastReceiver.SENSOR_START_ENABLED -> {
+                    logd("Sensor enabled: " + CONFIG.enabled)
+
+                    if (CONFIG.enabled) {
+                        startService(context)
+                    }
+                }
+
+                ACTION_AWARE_TIMEZONE_STOP,
+                AwareSensor.SensorBroadcastReceiver.SENSOR_STOP_ALL -> {
+                    logd("Stopping sensor.")
+                    stopService(context)
+                }
+
+                ACTION_AWARE_TIMEZONE_START -> {
+                    startService(context)
+                }
+            }
+        }
+    }
+
+    data class TimezoneConfig(
+            var timezoneObserver: TimezoneObserver? = null
+    ) : SensorConfig(dbPath = "aware_timezone") {
+
+        fun replaceWith(config: TimezoneConfig) {
+            enabled = config.enabled
+            debug = config.debug
+            label = config.label
+            deviceId = config.deviceId
+            dbEncryptionKey = config.dbEncryptionKey
+            dbType = config.dbType
+            dbPath = config.dbPath
+            dbHost = config.dbHost
+
+            timezoneObserver = config.timezoneObserver
+        }
+
+        fun replaceWith(json: String) {
+            replaceWith(Gson().fromJson(json, TimezoneConfig::class.java) ?: return)
+        }
+    }
+
+    interface TimezoneObserver {
+        fun onTimezoneChanged(data: TimezoneData)
+    }
 }
 
 private fun logd(text: String) {
-    if (TimezoneService.config["debug"] == "")
+    if (TimezoneService.CONFIG.debug)
         Log.d(TimezoneService.TAG, text)
 }
