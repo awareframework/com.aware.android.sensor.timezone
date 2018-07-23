@@ -26,7 +26,7 @@ class TimezoneService : AwareSensor() {
         const val TAG = "AwareTimezoneService"
 
         /**
-         * Broadcasted event: when there is new timezone information
+         * Broadcast event: when there is new timezone information
          */
         const val ACTION_AWARE_TIMEZONE = "ACTION_AWARE_TIMEZONE"
         const val EXTRA_DATA = "data"
