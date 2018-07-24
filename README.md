@@ -23,7 +23,7 @@ Class to hold the configuration of the timezone sensor.
 + `host: String`: Host for syncing the database. (default = null)
 + `type: EngineDatabaseType)`: Which db engine to use for saving data. (default = NONE)
 + `path: String`: Path of the database.
-+ `sensorObserver: BatteryObserver`: Callback for live data updates.
++ `sensorObserver: TimezoneObserver`: Callback for live data updates.
 + `deviceId: String`: Id of the device that will be associated with the events and the sensor. (default = "")
 
 ## Broadcasts
