@@ -128,7 +128,7 @@ class TimezoneService : AwareSensor() {
 
         dbEngine?.save(data, TimezoneData.TABLE_NAME)
 
-        CONFIG.timezoneObserver?.onTimezoneChanged(data)
+        CONFIG.sensorObserver?.onTimezoneChanged(data)
 
         sendBroadcast(Intent(ACTION_AWARE_TIMEZONE).apply {
             putExtra(EXTRA_DATA, lastTimezone)
@@ -171,14 +171,14 @@ class TimezoneService : AwareSensor() {
     }
 
     data class TimezoneConfig(
-            var timezoneObserver: TimezoneObserver? = null
+            var sensorObserver: TimezoneObserver? = null
     ) : SensorConfig(dbPath = "aware_timezone") {
 
         override fun <T : SensorConfig> replaceWith(config: T) {
             super.replaceWith(config)
 
             if (config is TimezoneConfig) {
-                timezoneObserver = config.timezoneObserver
+                sensorObserver = config.sensorObserver
             }
         }
 
