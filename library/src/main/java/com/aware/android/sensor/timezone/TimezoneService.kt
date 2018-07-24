@@ -8,6 +8,7 @@ import android.os.IBinder
 import android.util.Log
 import com.aware.android.sensor.timezone.model.TimezoneData
 import com.awareframework.android.core.AwareSensor
+import com.awareframework.android.core.db.Engine
 import com.awareframework.android.core.model.SensorConfig
 import com.google.gson.Gson
 import java.util.*
@@ -72,6 +73,13 @@ class TimezoneService : AwareSensor() {
 
     override fun onCreate() {
         super.onCreate()
+
+        dbEngine = Engine.Builder(this)
+                .setType(CONFIG.dbType)
+                .setPath(CONFIG.dbPath)
+                .setHost(CONFIG.dbHost)
+                .setEncryptionKey(CONFIG.dbEncryptionKey)
+                .build()
 
         registerReceiver(timezoneReceiver, IntentFilter().apply {
             addAction(Intent.ACTION_TIMEZONE_CHANGED)
@@ -166,17 +174,12 @@ class TimezoneService : AwareSensor() {
             var timezoneObserver: TimezoneObserver? = null
     ) : SensorConfig(dbPath = "aware_timezone") {
 
-        fun replaceWith(config: TimezoneConfig) {
-            enabled = config.enabled
-            debug = config.debug
-            label = config.label
-            deviceId = config.deviceId
-            dbEncryptionKey = config.dbEncryptionKey
-            dbType = config.dbType
-            dbPath = config.dbPath
-            dbHost = config.dbHost
+        override fun <T : SensorConfig> replaceWith(config: T) {
+            super.replaceWith(config)
 
-            timezoneObserver = config.timezoneObserver
+            if (config is TimezoneConfig) {
+                timezoneObserver = config.timezoneObserver
+            }
         }
 
         fun replaceWith(json: String) {
