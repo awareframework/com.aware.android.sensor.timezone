@@ -133,6 +133,8 @@ class TimezoneService : AwareSensor() {
         sendBroadcast(Intent(ACTION_AWARE_TIMEZONE).apply {
             putExtra(EXTRA_DATA, lastTimezone)
         })
+
+        logd("$ACTION_AWARE_TIMEZONE: $data")
     }
 
     override fun onSync(intent: Intent?) {

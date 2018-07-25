@@ -1,6 +1,7 @@
 package com.awareframework.android.sensor.timezone.model
 
 import com.awareframework.android.core.model.AwareObject
+import com.google.gson.Gson
 
 /**
  * Contains the device’s timezone history.
@@ -14,4 +15,6 @@ data class TimezoneData(
     companion object {
         const val TABLE_NAME = "timezoneData"
     }
+
+    override fun toString(): String = Gson().toJson(this)
 }
