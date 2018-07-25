@@ -1,4 +1,4 @@
-package com.aware.android.sensor.timezone
+package com.awareframework.android.sensor.timezone
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

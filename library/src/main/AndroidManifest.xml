@@ -1,12 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.aware.android.sensor.timezone">
+    package="com.awareframework.android.sensor.timezone">
 
     <application>
         <service
-            android:name=".TimezoneService"
+            android:name="com.awareframework.android.sensor.timezone.TimezoneService"
             android:exported="true" />
         <receiver
-            android:name=".TimezoneService$TimezoneServiceBroadcastReceiver"
+            android:name="com.awareframework.android.sensor.timezone.TimezoneService$TimezoneServiceBroadcastReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.aware.android.sensor.timezone.SENSOR_START" />

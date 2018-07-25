@@ -1,4 +1,4 @@
-package com.aware.android.sensor.timezone.model
+package com.awareframework.android.sensor.timezone.model
 
 import com.awareframework.android.core.model.AwareObject
 

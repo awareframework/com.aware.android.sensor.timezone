@@ -1,4 +1,4 @@
-package com.aware.android.sensor.timezone
+package com.awareframework.android.sensor.timezone
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
 import android.util.Log
-import com.aware.android.sensor.timezone.model.TimezoneData
+import com.awareframework.android.sensor.timezone.model.TimezoneData
 import com.awareframework.android.core.AwareSensor
 import com.awareframework.android.core.db.Engine
 import com.awareframework.android.core.model.SensorConfig

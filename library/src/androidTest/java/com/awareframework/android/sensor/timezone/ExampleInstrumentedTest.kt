@@ -1,8 +1,8 @@
-package com.aware.android.sensor.timezone
+package com.awareframework.android.sensor.timezone
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.aware.android.sensor.timezone.model.TimezoneData
+import com.awareframework.android.sensor.timezone.model.TimezoneData
 import com.awareframework.android.core.db.Engine
 import org.junit.Assert.assertEquals
 import org.junit.Test
