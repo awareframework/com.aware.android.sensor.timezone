@@ -20,11 +20,11 @@ import java.util.*
  * @author  sercant
  * @date 23/07/2018
  */
-class TimezoneService : AwareSensor() {
+class TimezoneSensor : AwareSensor() {
 
     companion object {
 
-        const val TAG = "AwareTimezoneService"
+        const val TAG = "AwareTimezoneSensor"
 
         /**
          * Broadcast event: when there is new timezone information
@@ -42,11 +42,11 @@ class TimezoneService : AwareSensor() {
         fun startService(context: Context, config: TimezoneConfig? = null) {
             if (config != null)
                 CONFIG.replaceWith(config)
-            context.startService(Intent(context, TimezoneService::class.java))
+            context.startService(Intent(context, TimezoneSensor::class.java))
         }
 
         fun stopService(context: Context) {
-            context.stopService(Intent(context, TimezoneService::class.java))
+            context.stopService(Intent(context, TimezoneSensor::class.java))
         }
 
         val CONFIG: TimezoneConfig = TimezoneConfig()
@@ -143,7 +143,7 @@ class TimezoneService : AwareSensor() {
 
     override fun onBind(intent: Intent?): IBinder? = null
 
-    class TimezoneServiceBroadcastReceiver : AwareSensor.SensorBroadcastReceiver() {
+    class TimezoneSensorBroadcastReceiver : AwareSensor.SensorBroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
             context ?: return
@@ -195,6 +195,6 @@ class TimezoneService : AwareSensor() {
 }
 
 private fun logd(text: String) {
-    if (TimezoneService.CONFIG.debug)
-        Log.d(TimezoneService.TAG, text)
+    if (TimezoneSensor.CONFIG.debug)
+        Log.d(TimezoneSensor.TAG, text)
 }

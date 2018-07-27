@@ -3,10 +3,10 @@
 
     <application>
         <service
-            android:name="com.awareframework.android.sensor.timezone.TimezoneService"
+            android:name="com.awareframework.android.sensor.timezone.TimezoneSensor"
             android:exported="true" />
         <receiver
-            android:name="com.awareframework.android.sensor.timezone.TimezoneService$TimezoneServiceBroadcastReceiver"
+            android:name="com.awareframework.android.sensor.timezone.TimezoneSensor$TimezoneSensorBroadcastReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.aware.android.sensor.timezone.SENSOR_START" />

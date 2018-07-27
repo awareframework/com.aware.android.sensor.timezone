@@ -22,8 +22,8 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getTargetContext()
         assertEquals("com.aware.android.sensor.timezone", appContext.packageName)
 
-        TimezoneService.startService(appContext, TimezoneService.TimezoneConfig(
-                object : TimezoneService.TimezoneObserver {
+        TimezoneSensor.startService(appContext, TimezoneSensor.TimezoneConfig(
+                object : TimezoneSensor.TimezoneObserver {
                     override fun onTimezoneChanged(data: TimezoneData) {
                         // your code here...
                     }

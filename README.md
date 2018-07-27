@@ -6,7 +6,7 @@ The timezone sensor keeps track of the user’s current timezone.
 
 ## Public functions
 
-### TimezoneService
+### TimezoneSensor
 
 + `startService(context: Context, config: TimezoneConfig?)`: Starts the timezone sensor with the optional configuration.
 + `stopService(context: Context)`: Stops the timezone service.
@@ -28,7 +28,7 @@ Class to hold the configuration of the timezone sensor.
 
 ## Broadcasts
 
-+ `TimezoneService.ACTION_AWARE_TIMEZONE` broadcasted when there is new timezone information. Extra includes `TimezoneService.EXTRA_DATA` for the new timezone.
++ `TimezoneSensor.ACTION_AWARE_TIMEZONE` broadcasted when there is new timezone information. Extra includes `TimezoneSensor.EXTRA_DATA` for the new timezone.
 
 ## Data Representations
 
@@ -48,8 +48,9 @@ Class to hold the configuration of the timezone sensor.
 
 ```kotlin
 // To start the service.
-TimezoneService.startService(appContext, TimezoneService.TimezoneConfig(
-                object : TimezoneService.TimezoneObserver {
+TimezoneSensor.startService(appContext, TimezoneSensor.TimezoneConfig(
+                object : TimezoneSensor
+            .TimezoneObserver {
                     override fun onTimezoneChanged(data: TimezoneData) {
                         // your code here...
                     }
@@ -61,7 +62,7 @@ TimezoneService.startService(appContext, TimezoneService.TimezoneConfig(
         })
 
 // To stop the service
-TimezoneService.stopService(appContext)
+TimezoneSensor.stopService(appContext)
 ```
 
 ## License
