@@ -173,7 +173,7 @@ class TimezoneSensor : AwareSensor() {
     }
 
     data class TimezoneConfig(
-            var sensorObserver: TimezoneObserver? = null
+            var sensorObserver: SensorObserver? = null
     ) : SensorConfig(dbPath = "aware_timezone") {
 
         override fun <T : SensorConfig> replaceWith(config: T) {
@@ -189,7 +189,7 @@ class TimezoneSensor : AwareSensor() {
         }
     }
 
-    interface TimezoneObserver {
+    interface SensorObserver {
         fun onTimezoneChanged(data: TimezoneData)
     }
 }

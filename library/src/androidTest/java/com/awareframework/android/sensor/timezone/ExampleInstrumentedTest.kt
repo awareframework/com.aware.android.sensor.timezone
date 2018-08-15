@@ -23,7 +23,7 @@ class ExampleInstrumentedTest {
         assertEquals("com.aware.android.sensor.timezone", appContext.packageName)
 
         TimezoneSensor.startService(appContext, TimezoneSensor.TimezoneConfig(
-                object : TimezoneSensor.TimezoneObserver {
+                object : TimezoneSensor.SensorObserver {
                     override fun onTimezoneChanged(data: TimezoneData) {
                         // your code here...
                     }
