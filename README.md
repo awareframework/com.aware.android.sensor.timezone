@@ -8,23 +8,24 @@ The timezone sensor keeps track of the user’s current timezone.
 
 ### TimezoneSensor
 
-+ `startService(context: Context, config: TimezoneConfig?)`: Starts the timezone sensor with the optional configuration.
-+ `stopService(context: Context)`: Stops the timezone service.
++ `start(context: Context, config: TimezoneSensor.Config?)`: Starts the timezone sensor with the optional configuration.
++ `stop(context: Context)`: Stops the timezone service.
 
-### TimezoneConfig
+### TimezoneSensor.Config
 
 Class to hold the configuration of the timezone sensor.
 
 #### Fields
 
-+ `debug: Boolean`: enable/disable logging to `Logcat`. (default = false)
-+ `host: String`: Host for syncing the database. (default = null)
-+ `key: String`: Encryption key for the database. (default = no encryption)
-+ `host: String`: Host for syncing the database. (default = null)
-+ `type: EngineDatabaseType)`: Which db engine to use for saving data. (default = NONE)
-+ `path: String`: Path of the database.
 + `sensorObserver: TimezoneObserver`: Callback for live data updates.
-+ `deviceId: String`: Id of the device that will be associated with the events and the sensor. (default = "")
++ `enabled: Boolean` Sensor is enabled or not. (default = false)
++ `debug: Boolean` enable/disable logging to `Logcat`. (default = false)
++ `label: String` Label for the data. (default = "")
++ `deviceId: String` Id of the device that will be associated with the events and the sensor. (default = "")
++ `dbEncryptionKey` Encryption key for the database. (default =String? = null)
++ `dbType: Engine` Which db engine to use for saving data. (default = `Engine.DatabaseType.NONE`)
++ `dbPath: String` Path of the database. (default = "aware_wifi")
++ `dbHost: String` Host for syncing the database. (Defult = `null`)
 
 ## Broadcasts
 
@@ -38,6 +39,7 @@ Class to hold the configuration of the timezone sensor.
 | ---------- | ------ | ---------------------------------------------------------------------------- |
 | timezoneId | String | the timezone ID string, i.e., “America/Los_Angeles, GMT-08:00” [(more)][1] |
 | deviceId   | String | AWARE device UUID                                                            |
+| label      | String | Customizable label. Useful for data calibration or traceability              |
 | timestamp  | Long   | unixtime milliseconds since 1970                                             |
 | timezone   | Int    | Timezone of the device                                                       |
 | os         | String | Operating system of the device (ex. android)                                 |
@@ -48,9 +50,8 @@ Class to hold the configuration of the timezone sensor.
 
 ```kotlin
 // To start the service.
-TimezoneSensor.startService(appContext, TimezoneSensor.TimezoneConfig(
-                object : TimezoneSensor
-            .TimezoneObserver {
+TimezoneSensor.start(appContext, TimezoneSensor.Config(
+                object : TimezoneSensor.Observer {
                     override fun onTimezoneChanged(data: TimezoneData) {
                         // your code here...
                     }
@@ -62,7 +63,7 @@ TimezoneSensor.startService(appContext, TimezoneSensor.TimezoneConfig(
         })
 
 // To stop the service
-TimezoneSensor.stopService(appContext)
+TimezoneSensor.stop(appContext)
 ```
 
 ## License
