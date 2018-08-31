@@ -152,6 +152,7 @@ class TimezoneSensor : AwareSensor() {
         ).apply {
             timestamp = System.currentTimeMillis()
             deviceId = CONFIG.deviceId
+            label = CONFIG.label
         }
 
         dbEngine?.save(data, TimezoneData.TABLE_NAME)
